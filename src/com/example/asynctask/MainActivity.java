@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
         open.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 MyAsyncTask myAsyncTask = new MyAsyncTask(MainActivity.this);
-                myAsyncTask.execute();
+                myAsyncTask.execute(url.getText().toString());
             }
         });
 
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    class MyAsyncTask extends AsyncTask<Void, Integer, String> {
+    class MyAsyncTask extends AsyncTask<String, Integer, String> {
         // 可变长的输入参数，与AsyncTask.exucute()对应
         ProgressDialog pdialog;
 
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... params) {
 
             try {
                 for (int i = 0; i <= 100; i += 10) {
@@ -75,6 +75,8 @@ public class MainActivity extends Activity {
                     Thread.sleep(1000);
                     publishProgress(i);
                 }
+                
+                return params[0];
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -104,7 +106,6 @@ public class MainActivity extends Activity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             Log.i(TAG, "onProgressUpdate...");
-            System.out.println("" + values[0]);
             message.setText("" + values[0]);
             pdialog.setProgress(values[0]);
         }
